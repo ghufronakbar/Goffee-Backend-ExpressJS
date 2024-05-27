@@ -75,7 +75,7 @@ exports.checkoutCart = async (req, res) => {
                                                             let price = rows[i].price
                                                             let amount = rows[i].amount
                                                             let id_menu = rows[i].id_menu
-                                                            let status = rows[i].status                                                            
+                                                            let status = rows[i].status
                                                             total = total + (price * amount)
 
                                                             let qItemHistory = `INSERT INTO item_histories(id_history,menu_name,variant,price,amount) VALUES (?,?,?,?,?)`
@@ -91,6 +91,8 @@ exports.checkoutCart = async (req, res) => {
                                                         if (address) {
                                                             total = total + 5000 //SHIPPING COST
                                                         }
+                                                        const randomPrice = Math.floor(Math.random() * 100);
+                                                        total = total+randomPrice
                                                         const qTotalHistory = `UPDATE histories SET total=? WHERE id_history=?`
                                                         const vTotalHistory = [total, iHistory]
                                                         connection.query(qTotalHistory, vTotalHistory,
@@ -106,7 +108,17 @@ exports.checkoutCart = async (req, res) => {
                                                                                 console.log(error);
                                                                                 res.status(500).json({ status: 500, message: "Internal Server Error" });
                                                                             } else {
-                                                                                res.status(200).json({ status: 200, message: "Checkout Successfully" });
+                                                                                connection.query(`SELECT * FROM informations WHERE id_information=1`,
+                                                                                    (error, rr, result) => {
+                                                                                        if (error) {
+                                                                                            console.log(error);
+                                                                                            res.status(500).json({ status: 500, message: "Internal Server Error" });
+                                                                                        } else {
+                                                                                            const { bank_name, bank_account } = rr[0]
+                                                                                            res.status(200).json({ status: 200, message: "Checkout succesfully", bank_name, bank_account,total });
+                                                                                        }
+                                                                                    }
+                                                                                )
                                                                             }
                                                                         }
                                                                     )

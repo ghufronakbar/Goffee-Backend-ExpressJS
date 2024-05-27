@@ -10,14 +10,14 @@ app.use(bodyParser.json());
 app.use(cors());
 
 //routes
-var routesAdmin = require("./routes/admin");
+var routesAdmin = require("../routes/admin");
 routesAdmin(app);
 
 
-var routesUser = require("./routes/user");
+var routesUser = require("../routes/user");
 routesUser(app);
 
-app.use('/images/menu', express.static(path.join(__dirname, 'images/menu')));
+app.use('/images/menu', express.static(path.join(__dirname, '../images/menu')));
 
 app.listen(5000, () => {
   console.log(`Server started on port`);
