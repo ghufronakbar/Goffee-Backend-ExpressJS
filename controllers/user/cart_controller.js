@@ -74,7 +74,7 @@ exports.cartUser = async (req, res) => {
 
 exports.cartSetAmount = async (req, res) => {
     const amount = parseInt(req.body.amount);
-    const id_cart_item = req.params.id_cart_item;
+    const id_cart_item = req.body.id_cart_item;
 
     const query_select_item = `SELECT * FROM cart_items WHERE id_cart_item=?`;
     connection.query(query_select_item, [id_cart_item], function (error, rows, fields) {
@@ -86,7 +86,7 @@ exports.cartSetAmount = async (req, res) => {
                 return res.status(404).json({ status: 404, message: "Cart item not found" });
             }
             const current_amount = parseInt(rows[0].amount);
-            const total_amount = amount + current_amount;
+            const total_amount = amount;
 
             if (total_amount < 1) {
                 const query_delete_item = `DELETE FROM cart_items WHERE id_cart_item=?`
@@ -131,8 +131,8 @@ exports.cartDeleteItem = async (req, res) => {
                 console.log(error);
                 res.status(500).json({ status: 500, message: "Internal Server Error" });
             } else {
-                res.status(201).json({
-                    status: 201,
+                res.status(200).json({
+                    status: 200,
                     message: "Item has been deleted"
                 });
             }
@@ -166,7 +166,7 @@ exports.addToCart = async (req, res) => {
                             } else {
                                 res.status(200).json({
                                     status: 200,
-                                    message: "Item has been already in your cart"
+                                    message: "Jumlah Item telah ditambahkan ke keranjang"
                                 })
                             }
                         }
@@ -181,7 +181,7 @@ exports.addToCart = async (req, res) => {
                             } else {
                                 res.status(200).json({
                                     status: 200,
-                                    message: "Item has been added to cart"
+                                    message: "Item telah ditambahkan ke keranjang"
                                 });
                             }
                         }

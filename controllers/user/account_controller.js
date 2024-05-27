@@ -122,7 +122,7 @@ exports.check_user = function (req, res) {
 
 exports.profile = function (req, res) {
   const id_user = req.decoded.id_user
-  connection.query(`SELECT * FROM users WHERE id_user=?`, id_user,
+  connection.query(`SELECT fullname, email, phone FROM users WHERE id_user=?`, id_user,
     function (error, rows, fields) {
       if (error) {
         console.log(error);
