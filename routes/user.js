@@ -7,9 +7,9 @@ module.exports = function (app) {
 
   // ACCOUNT CONTROLLER
 
-  app.route(/api/user / register).post(api_user.account_controller.register);
+  app.route("/api/user/register").post(api_user.account_controller.register);
 
-  app.route(/api/user / login).post(api_user.account_controller.login);
+  app.route("/api/user/login").post(api_user.account_controller.login);
 
   app
     .route("/api/user/check")
@@ -26,6 +26,11 @@ module.exports = function (app) {
   app
     .route("/api/user/profile/password")
     .put(verifikasiUser, api_user.account_controller.editPassword);
+
+      // INFORMATION CONTROLLER
+  app
+    .route(`/api/user/information`)
+    .get(api_user.information_controller.infoPayment);
 
   //MENU CONTROLLER
   app
