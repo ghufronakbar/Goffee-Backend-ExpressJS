@@ -27,7 +27,7 @@ module.exports = function (app) {
     .route("/api/user/profile/password")
     .put(verifikasiUser, api_user.account_controller.editPassword);
 
-      // INFORMATION CONTROLLER
+  // INFORMATION CONTROLLER
   app
     .route(`/api/user/information`)
     .get(api_user.information_controller.infoPayment);
@@ -69,6 +69,9 @@ module.exports = function (app) {
   app
     .route("/api/user/orders/pending")
     .get(verifikasiUser, api_user.order_controller.orderPending);
+  app
+    .route("/api/user/orders/process")
+    .get(verifikasiUser, api_user.order_controller.orderProcess);
 
   app
     .route("/api/user/orders/cancel-by-user")
@@ -82,9 +85,6 @@ module.exports = function (app) {
     .route("/api/user/orders/paid")
     .get(verifikasiUser, api_user.order_controller.orderPaid);
 
-  app
-    .route("/api/user/orders/process")
-    .get(verifikasiUser, api_user.order_controller.orderProcess);
 
   app
     .route("/api/user/orders/ready")
@@ -129,14 +129,4 @@ module.exports = function (app) {
     .put(verifikasiUser, api_user.checkout_controller.cancelOrder);
 
 
-  // CHECKOUT CONTROLLER
-  app.route('/api/user/checkout')
-    .post(verifikasiUser, api_user.checkout_controller.checkoutCart);
-
-  app.route('/api/user/confirm/:id_history')
-    .put(verifikasiUser, api_user.checkout_controller.confirmOrder);
-
-  app.route('/api/user/cancel/:id_history')
-    .put(verifikasiUser, api_user.checkout_controller.cancelOrder);
 };
-

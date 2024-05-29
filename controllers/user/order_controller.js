@@ -14,13 +14,13 @@ const fs = require('fs');
 
 exports.orderAll = async (req, res) => {
     const id_user = req.decoded.id_user;
-    await connection.query(`SELECT * FROM histories WHERE id_user=?`, [id_user],
+    await connection.query(`SELECT * FROM histories WHERE id_user=? ORDER BY ordered_at DESC`, [id_user],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
             } else {
                 if (rows.length == 0) {
-                     res.json({status: 204, message:"There's no orders"});
+                     res.json({status: 204, values:[]});
                 } else if(rows.length > 0){
                     res.json({status:200, values:rows})                    
                 }
@@ -32,13 +32,29 @@ exports.orderAll = async (req, res) => {
 
 exports.orderPending = async (req, res) => {
     const id_user = req.decoded.id_user;
-    await connection.query(`SELECT * FROM histories WHERE id_user=? AND status=0`, [id_user],
+    await connection.query(`SELECT * FROM histories WHERE id_user=? AND status=0 ORDER BY ordered_at DESC`, [id_user],
         function (error, rows, fields) {
             if (error) {
                 console.log(error)
             } else {
                 if (rows.length == 0) {
-                     res.json({status: 204, message:"There's no pending orders"});
+                     res.json({status: 204, values:[]});
+                } else if(rows.length > 0){
+                    res.json({status:200, values:rows})                    
+                }
+            };
+        }
+    )
+}
+exports.orderProcess = async (req, res) => {
+    const id_user = req.decoded.id_user;
+    await connection.query(`SELECT * FROM histories WHERE id_user=? AND (status=3 OR status=4 OR status=5) ORDER BY ordered_at DESC`, [id_user],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error)
+            } else {
+                if (rows.length == 0) {
+                     res.json({status: 204, values:[]});
                 } else if(rows.length > 0){
                     res.json({status:200, values:rows})                    
                 }
@@ -100,22 +116,22 @@ exports.orderPaid = async (req, res) => {
 }
 
 
-exports.orderProcess = async (req, res) => {
-    const id_user = req.decoded.id_user;
-    await connection.query(`SELECT * FROM histories WHERE id_user=? AND status=4`, [id_user],
-        function (error, rows, fields) {
-            if (error) {
-                console.log(error)
-            } else {
-                if (rows.length == 0) {
-                     res.json({status: 204, message:"There's no proceed order"});
-                } else if(rows.length > 0){
-                    res.json({status:200, values:rows})                    
-                }
-            };
-        }
-    )
-}
+// exports.orderProcess = async (req, res) => {
+//     const id_user = req.decoded.id_user;
+//     await connection.query(`SELECT * FROM histories WHERE id_user=? AND status=4`, [id_user],
+//         function (error, rows, fields) {
+//             if (error) {
+//                 console.log(error)
+//             } else {
+//                 if (rows.length == 0) {
+//                      res.json({status: 204, message:"There's no proceed order"});
+//                 } else if(rows.length > 0){
+//                     res.json({status:200, values:rows})                    
+//                 }
+//             };
+//         }
+//     )
+// }
 
 
 
@@ -156,18 +172,28 @@ exports.orderDone = async (req, res) => {
 
 
 exports.orderId = async (req, res) => {    
-    const id_history = req.params.id_history
-    await connection.query(`SELECT * FROM histories WHERE  id_history=?`, [id_history],
-        function (error, rows, fields) {
+    const id_history = req.params.id_history;
+    await connection.query(`SELECT * FROM histories WHERE id_history=?`, [id_history],
+        async function (error, rows, fields) {
             if (error) {
-                console.log(error)
+                console.log(error);
             } else {
                 if (rows.length == 0) {
-                     res.json({status: 400, message:"There's no data"});
-                } else if(rows.length > 0){
-                    res.json({status:200, values:rows})                    
+                    res.json({status: 400, message:"There's no data"});
+                } else if (rows.length > 0) {
+                    const history = rows[0];
+                    connection.query(`SELECT * FROM item_histories WHERE id_history=?`, [id_history],
+                        function (error, rows, fields) {
+                            if (error) {
+                                console.log(error);
+                                res.json({status: 500, message: "Internal server error"});
+                            } else {
+                                res.json({status: 200, values: {history: history, menu: rows}});
+                            }
+                        }
+                    );
                 }
-            };
+            }
         }
-    )
-}
+    );
+};

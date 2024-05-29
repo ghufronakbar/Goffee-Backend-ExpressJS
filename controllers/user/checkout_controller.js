@@ -115,7 +115,7 @@ exports.checkoutCart = async (req, res) => {
                                                                                             res.status(500).json({ status: 500, message: "Internal Server Error" });
                                                                                         } else {
                                                                                             const { bank_name, bank_account } = rr[0]
-                                                                                            res.status(200).json({ status: 200, message: "Checkout succesfully", bank_name, bank_account,total });
+                                                                                            res.status(200).json({ status: 200, message: "Checkout succesfully", bank_name, bank_account,total, iHistory });
                                                                                         }
                                                                                     }
                                                                                 )
