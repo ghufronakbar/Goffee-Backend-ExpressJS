@@ -12,8 +12,7 @@ var mysql = require('mysql');
 // ALL HISTORY
 exports.allOrder = function (req, res) {
     connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
-                        h.ordered_at, h.finished_at,
-                        u.id_user, u.fullname, u.email, u.phone,
+                        h.ordered_at, h.finished_at,u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
                         FROM histories AS h 
                         JOIN users AS u ON h.id_user = u.id_user

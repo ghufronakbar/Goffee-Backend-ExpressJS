@@ -49,14 +49,13 @@ exports.handleReady = function (req, res) {
 
     connection.query(`SELECT h.id_history, h.id_user, h.address, u.fullname 
                         FROM histories AS h JOIN users AS u
-                        WHERE h.id_user = u.id_user AND id_history`
+                        WHERE h.id_user = u.id_user AND id_history=?`
         , [id_history], function (error, rows, fields) {
             if (error) {
                 console.log(error)
             } else {
-                let index = id_history - 1
-                let address = rows[index].address
-                let fullname = rows[index].fullname
+                const address = rows[0].address
+                const fullname = rows[0].fullname
                 if (address == null) {
                     let msgTakeAway = `Pesananmu sudah siap, ambil segera, Kak ${fullname} !`
                     connection.query(`UPDATE histories SET status=5,admin_notes=? WHERE id_history=? `, [msgTakeAway, id_history],
