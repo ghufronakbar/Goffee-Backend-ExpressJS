@@ -72,7 +72,7 @@ exports.totalIncomeMonthly = function (req, res) {
    AND h.finished_at IS NOT NULL
    AND h.finished_at >= DATE_SUB(CURRENT_DATE, INTERVAL 12 MONTH)
  GROUP BY month
- 
+ LIMIT 12
  `,
         [formattedDate],
         function (error, rows, fields) {
