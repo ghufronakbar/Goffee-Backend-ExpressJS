@@ -74,8 +74,6 @@ module.exports = function (app) {
     .put(verifikasiAdmin, api_admin.handle_controller.handleDone);
 
 
-
-
   //STATISTIC CONTROLLER
   app.route(`/api/admin/order/total/done`)
     .get(verifikasiAdmin, api_admin.statistic_controller.totalDone);
