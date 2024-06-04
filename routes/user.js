@@ -1,9 +1,9 @@
 "use strict";
 
 const verifikasiUser = require("../middleware/verifikasi-user");
+const api_user = require("../controllers/user");
 
 module.exports = function (app) {
-  let api_user = require("../controllers/user");
 
   // ACCOUNT CONTROLLER
 

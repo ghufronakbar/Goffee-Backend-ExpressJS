@@ -1,10 +1,9 @@
 "use strict";
 
-// const verifikasi = require("./middleware/verifikasi");
+const verifikasiAdmin = require("../middleware/verifikasi-admin");
+const api_admin = require("../controllers/admin");
 
 module.exports = function (app) {
-  var api_admin = require("../controllers/admin");
-
 
   //LOGIN
   app.route(`/api/admin/login`)
@@ -12,94 +11,93 @@ module.exports = function (app) {
 
 
   //MENU CONTROLLER
-
   app.route(`/api/admin/menus`)
-    .get(api_admin.menu_controller.menus);
+    .get(verifikasiAdmin, api_admin.menu_controller.menus);
 
   app.route(`/api/admin/menu/:id_menu`)
-    .get(api_admin.menu_controller.menuId);
+    .get(verifikasiAdmin, api_admin.menu_controller.menuId);
 
   app.route(`/api/admin/menu/add`)
-    .post(api_admin.menu_controller.menuAdd);
+    .post(verifikasiAdmin, api_admin.menu_controller.menuAdd);
 
   app.route(`/api/admin/menu/edit/:id_menu`)
-    .put(api_admin.menu_controller.menuEdit);
+    .put(verifikasiAdmin, api_admin.menu_controller.menuEdit);
 
   app.route(`/api/admin/menu/setstock/:id_menu`)
-    .put(api_admin.menu_controller.menuSetStock);
+    .put(verifikasiAdmin, api_admin.menu_controller.menuSetStock);
 
   app.route(`/api/admin/menu/delete/:id_menu`)
-    .delete(api_admin.menu_controller.menuDelete);
+    .delete(verifikasiAdmin, api_admin.menu_controller.menuDelete);
 
 
   // ORDER CONTROLLER
 
   app.route(`/api/admin/orders`)
-    .get(api_admin.order_controller.allOrder);
+    .get(verifikasiAdmin, api_admin.order_controller.allOrder);
 
   app.route(`/api/admin/order/:id_history`)
-    .get(api_admin.order_controller.orderId);
+    .get(verifikasiAdmin, api_admin.order_controller.orderId);
 
   app.route(`/api/admin/orders/0`)
-    .get(api_admin.order_controller.allOrderPending);
+    .get(verifikasiAdmin, api_admin.order_controller.allOrderPending);
 
   app.route(`/api/admin/orders/1`)
-    .get(api_admin.order_controller.allOrderCancelByUser);
+    .get(verifikasiAdmin, api_admin.order_controller.allOrderCancelByUser);
 
   app.route(`/api/admin/orders/2`)
-    .get(api_admin.order_controller.allOrderCancelByAdmin);
+    .get(verifikasiAdmin, api_admin.order_controller.allOrderCancelByAdmin);
 
   app.route(`/api/admin/orders/3`)
-    .get(api_admin.order_controller.allOrderPaid);
+    .get(verifikasiAdmin, api_admin.order_controller.allOrderPaid);
 
   app.route(`/api/admin/orders/4`)
-    .get(api_admin.order_controller.allorderprocess);
+    .get(verifikasiAdmin, api_admin.order_controller.allorderprocess);
 
   app.route(`/api/admin/orders/5`)
-    .get(api_admin.order_controller.allOrderReady);
+    .get(verifikasiAdmin, api_admin.order_controller.allOrderReady);
 
   app.route(`/api/admin/orders/6`)
-    .get(api_admin.order_controller.allOrderDone);
+    .get(verifikasiAdmin, api_admin.order_controller.allOrderDone);
 
 
   //HANDLE CONTROLLER
   app.route(`/api/admin/order/cancel/:id_history`)
-    .put(api_admin.handle_controller.handleCancelByAdmin);
+    .put(verifikasiAdmin, api_admin.handle_controller.handleCancelByAdmin);
 
   app.route(`/api/admin/order/process/:id_history`)
-    .put(api_admin.handle_controller.handleProcess);
+    .put(verifikasiAdmin, api_admin.handle_controller.handleProcess);
 
   app.route(`/api/admin/order/ready/:id_history`)
-    .put(api_admin.handle_controller.handleReady);
+    .put(verifikasiAdmin, api_admin.handle_controller.handleReady);
 
   app.route(`/api/admin/order/done/:id_history`)
-    .put(api_admin.handle_controller.handleDone);
+    .put(verifikasiAdmin, api_admin.handle_controller.handleDone);
 
 
 
 
   //STATISTIC CONTROLLER
   app.route(`/api/admin/order/total/done`)
-    .get(api_admin.statistic_controller.totalDone);
+    .get(verifikasiAdmin, api_admin.statistic_controller.totalDone);
 
   app.route(`/api/admin/order/total/income/today`)
-    .get(api_admin.statistic_controller.totalIncomeToday);
+    .get(verifikasiAdmin, api_admin.statistic_controller.totalIncomeToday);
 
   app.route(`/api/admin/order/total/income/month`)
-    .get(api_admin.statistic_controller.totalIncomeMonth);
+    .get(verifikasiAdmin, api_admin.statistic_controller.totalIncomeMonth);
 
   app.route(`/api/admin/order/total/income/monthly`)
-    .get(api_admin.statistic_controller.totalIncomeMonthly);
+    .get(verifikasiAdmin, api_admin.statistic_controller.totalIncomeMonthly);
 
   app.route(`/api/admin/order/total/income/daily`)
-    .get(api_admin.statistic_controller.totalIncomeDaily);
+    .get(verifikasiAdmin, api_admin.statistic_controller.totalIncomeDaily);
 
 
   // INFORMATION CONTROLLER
   app.route(`/api/admin/information`)
-    .get(api_admin.information_controller.infoPayment);
+    .get(verifikasiAdmin, api_admin.information_controller.infoPayment);
 
   app.route(`/api/admin/information/edit`)
-    .put(api_admin.information_controller.editPaymnet);
+    .put(verifikasiAdmin, api_admin.information_controller.editPaymnet);
 };
 
