@@ -40,7 +40,19 @@ exports.menus = function (req, res) {
             if (error) {
                 console.log(error)
             } else {
-                response.ok(rows, res);
+                let results = [];
+                rows.forEach(row => {
+                    let item = {
+                        id_menu: row.id_menu,
+                        menu_name: row.menu_name,
+                        variant: row.variant,
+                        information: row.information,
+                        picture: process.env.BASE_URL + `/images/menu/` + row.picture,
+                        price: row.price
+                    };
+                    results.push(item);
+                });
+                return res.status(200).json({ status: 200, values: results });
             };
         }
     )
@@ -54,7 +66,19 @@ exports.menuId = function (req, res) {
             if (error) {
                 console.log(error)
             } else {
-                response.ok(rows, res);
+                let results = [];
+                rows.forEach(row => {
+                    let item = {
+                        id_menu: row.id_menu,
+                        menu_name: row.menu_name,
+                        variant: row.variant,
+                        information: row.information,
+                        picture: process.env.BASE_URL + `/images/menu/` + row.picture,
+                        price: row.price
+                    };
+                    results.push(item);
+                });
+                return res.status(200).json({ status: 200, values: results });
             };
         }
     )

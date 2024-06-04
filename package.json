@@ -2,7 +2,6 @@
   "name": "goffee",
   "version": "0.0.1",
   "description": "webserver goffee",
-
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon ./bin/www"
@@ -12,6 +11,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "ip": "^2.0.1",
     "jsonwebtoken": "^9.0.2",
