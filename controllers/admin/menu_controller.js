@@ -48,6 +48,7 @@ exports.menus = function (req, res) {
                         variant: row.variant,
                         information: row.information,
                         picture: process.env.BASE_URL + `/images/menu/` + row.picture,
+                        status: row.status,
                         price: row.price
                     };
                     results.push(item);
@@ -74,6 +75,7 @@ exports.menuId = function (req, res) {
                         variant: row.variant,
                         information: row.information,
                         picture: process.env.BASE_URL + `/images/menu/` + row.picture,
+                        status: row.status,
                         price: row.price
                     };
                     results.push(item);
