@@ -3,11 +3,9 @@
 const response = require('../../res');
 const connection = require('../../connection');
 const md5 = require('md5');
-const mysql = require('mysql');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/secret');
 const ip = require('ip');
-const verifikasi = require('../../middleware/verifikasi-user');
 
 // LOGIN
 exports.login = function (req, res) {

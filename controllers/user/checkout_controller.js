@@ -1,21 +1,11 @@
 'use strict';
 
-var response = require('../../res');
-var connection = require('../../connection');
-var md5 = require('md5');
-var ip = require('ip');
-var config = require('../../config/secret')
-var jwt = require('jsonwebtoken');
-var mysql = require('mysql');
-const multer = require('multer');
-const crypto = require('crypto');
-const fs = require('fs');
-
+const connection = require('../../connection');
 
 exports.checkoutCart = async (req, res) => {
     const id_user = req.decoded.id_user;
-    const address = req.body.address
-    const user_notes = req.body.user_notes
+    const { address, user_notes, latitude, longitude } = req.body
+
     let total = 0
     let now = new Date();
     let date_time =
@@ -37,8 +27,7 @@ exports.checkoutCart = async (req, res) => {
                 console.log(error);
                 return res.status(500).json({ status: 500, message: "Internal Server Error" });
             } else {
-                const validation_cart = rows.length
-                if (!validation_cart) {
+                if (rows.length == 0) {
                     res.status(400).json({ status: 400, message: "Cannot checkout an empty cart" });
                 } else {
                     const qItemCart = `SELECT i.id_cart_item, i.id_menu, i.amount, i.id_cart,
@@ -47,13 +36,13 @@ exports.checkoutCart = async (req, res) => {
                                         WHERE i.id_menu = m.id_menu AND
                                         i.id_cart=?`
                     connection.query(qItemCart, [id_user],
-                        function (error, rows, result) {
+                        (error, rows, result) => {
                             if (error) {
                                 console.log(error);
                                 return res.status(500).json({ status: 500, message: "Internal Server Error" });
                             } else {
-                                const qHistory = `INSERT INTO histories (id_user, address, user_notes,status, ordered_at) VALUES(?,?,?,?,?)`
-                                const vHistory = [id_user, address, user_notes, 0, date_time]
+                                const qHistory = `INSERT INTO histories (id_user, address, latitude, longitude, user_notes,status, ordered_at) VALUES(?,?,?,?,?,?,?)`
+                                const vHistory = [id_user, address, latitude, longitude, user_notes, 0, date_time]
                                 connection.query(qHistory, vHistory,
                                     function (error, r, result) {
                                         if (error) {
@@ -92,7 +81,7 @@ exports.checkoutCart = async (req, res) => {
                                                             total = total + 5000 //SHIPPING COST
                                                         }
                                                         const randomPrice = Math.floor(Math.random() * 100);
-                                                        total = total+randomPrice
+                                                        total = total + randomPrice
                                                         const qTotalHistory = `UPDATE histories SET total=? WHERE id_history=?`
                                                         const vTotalHistory = [total, iHistory]
                                                         connection.query(qTotalHistory, vTotalHistory,
@@ -115,14 +104,13 @@ exports.checkoutCart = async (req, res) => {
                                                                                             res.status(500).json({ status: 500, message: "Internal Server Error" });
                                                                                         } else {
                                                                                             const { bank_name, bank_account } = rr[0]
-                                                                                            res.status(200).json({ status: 200, message: "Checkout succesfully", bank_name, bank_account,total, iHistory });
+                                                                                            res.status(200).json({ status: 200, message: "Checkout succesfully", bank_name, bank_account, total, iHistory });
                                                                                         }
                                                                                     }
                                                                                 )
                                                                             }
                                                                         }
                                                                     )
-
                                                                 }
                                                             }
                                                         )

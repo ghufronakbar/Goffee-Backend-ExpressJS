@@ -1,17 +1,13 @@
 'use strict';
 
-var response = require('../../res');
-var connection = require('../../connection');
-var md5 = require('md5');
-var ip = require('ip');
-var config = require('../../config/secret')
-var jwt = require('jsonwebtoken');
-var mysql = require('mysql');
+const response = require('../../res');
+const connection = require('../../connection');
+const urlGoogleMaps = require('../../utils/urlGoogleMaps');
 
 
 // ALL HISTORY
 exports.allOrder = function (req, res) {
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
                         h.ordered_at, h.finished_at,u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
                         FROM histories AS h 
@@ -42,6 +38,9 @@ exports.allOrder = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,                            
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,
@@ -73,7 +72,7 @@ exports.allOrder = function (req, res) {
 //  HISTORY id
 exports.orderId = function (req, res) {
     let id_history = req.params.id_history
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
                         h.ordered_at, h.finished_at,
                         u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
@@ -104,6 +103,9 @@ exports.orderId = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,
@@ -132,7 +134,7 @@ exports.orderId = function (req, res) {
 
 
 exports.allOrderPending = function (req, res) {
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
     h.ordered_at, h.finished_at,
                         u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
@@ -163,6 +165,9 @@ exports.allOrderPending = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,
@@ -192,7 +197,7 @@ exports.allOrderPending = function (req, res) {
 
 
 exports.allOrderCancelByUser = function (req, res) {
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
     h.ordered_at, h.finished_at,
                         u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
@@ -223,6 +228,9 @@ exports.allOrderCancelByUser = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,
@@ -251,7 +259,7 @@ exports.allOrderCancelByUser = function (req, res) {
 
 
 exports.allOrderCancelByAdmin = function (req, res) {
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
     h.ordered_at, h.finished_at,
                         u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
@@ -282,6 +290,9 @@ exports.allOrderCancelByAdmin = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,
@@ -310,7 +321,7 @@ exports.allOrderCancelByAdmin = function (req, res) {
 
 
 exports.allOrderPaid = function (req, res) {
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
     h.ordered_at, h.finished_at,
                         u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
@@ -341,6 +352,9 @@ exports.allOrderPaid = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,
@@ -370,7 +384,7 @@ exports.allOrderPaid = function (req, res) {
 
 
 exports.allorderprocess = function (req, res) {
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
     h.ordered_at, h.finished_at,
                         u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
@@ -401,6 +415,9 @@ exports.allorderprocess = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,
@@ -430,7 +447,7 @@ exports.allorderprocess = function (req, res) {
 
 
 exports.allOrderReady = function (req, res) {
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
     h.ordered_at, h.finished_at,
                         u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
@@ -461,6 +478,9 @@ exports.allOrderReady = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,
@@ -489,7 +509,7 @@ exports.allOrderReady = function (req, res) {
 
 
 exports.allOrderDone = function (req, res) {
-    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.user_notes, h.admin_notes, h.status,
+    connection.query(`SELECT h.id_history, h.id_user, h.total, h.address, h.latitude, h.longitude, h.user_notes, h.admin_notes, h.status,
     h.ordered_at, h.finished_at,
                         u.id_user, u.fullname, u.email, u.phone,
                         i.id_item_history, i.menu_name, i.variant, i.price, i.amount
@@ -520,6 +540,9 @@ exports.allOrderDone = function (req, res) {
                             id_user: row.id_user,
                             total: row.total,
                             address: row.address,
+                            latitude: row.latitude,
+                            longitude: row.longitude,
+                            urlGoogleMaps: row.latitude !== null && row.longitude !== null ? urlGoogleMaps(row.latitude, row.longitude) : null, 
                             user_notes: row.user_notes,
                             admin_notes: row.admin_notes,
                             status: row.status,

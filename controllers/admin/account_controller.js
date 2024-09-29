@@ -1,12 +1,12 @@
 'use strict';
 
-var response = require('../../res');
-var connection = require('../../connection');
-var md5 = require('md5');
-var ip = require('ip');
-var config = require('../../config/secret')
-var jwt = require('jsonwebtoken');
-var mysql = require('mysql');
+
+const connection = require('../../connection');
+const md5 = require('md5');
+const ip = require('ip');
+const config = require('../../config/secret')
+const jwt = require('jsonwebtoken');
+const mysql = require('mysql');
 
 //LOGIN
 exports.login = function (req, res) {

@@ -4,7 +4,8 @@
   "description": "webserver goffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "start": "node ./bin/www"
   },
   "author": "",
   "license": "ISC",
